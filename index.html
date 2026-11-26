@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="BreatheWise AI — explore air quality, forecasts, health guidance and greener choices.">
+  <title>BreatheWise AI | Urban Air Quality Explorer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#overview"><span class="brand-mark"><i class="fa-solid fa-wind"></i></span><span>BreatheWise<span class="brand-ai"> AI</span><small>URBAN AIR INTELLIGENCE</small></span></a>
+      <div class="side-label">WORKSPACE</div>
+      <nav class="side-nav">
+        <a class="nav-link active" href="#overview"><i class="fa-solid fa-grid-2"></i> Overview</a>
+        <a class="nav-link" href="#map-section"><i class="fa-solid fa-map-location-dot"></i> Air quality map</a>
+        <a class="nav-link" href="#analytics-section"><i class="fa-solid fa-chart-line"></i> Analytics</a>
+        <a class="nav-link" href="#forecast-section"><i class="fa-solid fa-cloud-sun"></i> Forecast</a>
+        <a class="nav-link" href="#assistant-section"><i class="fa-solid fa-sparkles"></i> AI assistant</a>
+        <a class="nav-link" href="#health-section"><i class="fa-solid fa-heart-pulse"></i> Health guide</a>
+        <a class="nav-link" href="#alerts-section"><i class="fa-solid fa-bell"></i> Alerts</a>
+        <a class="nav-link" href="#eco-section"><i class="fa-solid fa-leaf"></i> Eco explorer</a>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="sidebar-tip"><span class="tip-icon"><i class="fa-solid fa-lightbulb"></i></span><b>Small actions matter</b><p>Cleaner air begins with informed everyday choices.</p></div>
+        <div class="profile-mini"><div class="avatar">BW</div><div><b>Explorer</b><small>Personal dashboard</small></div><i class="fa-solid fa-ellipsis"></i></div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="mobile-menu" id="menuToggle" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+        <div class="breadcrumb">Workspace <i class="fa-solid fa-chevron-right"></i> <b>Overview</b></div>
+        <div class="top-actions">
+          <span class="live-status"><span></span> LIVE DATA</span>
+          <button class="icon-btn" id="themeToggle" title="Toggle theme"><i class="fa-solid fa-moon"></i></button>
+          <div class="top-avatar">BW</div>
+        </div>
+      </header>
+
+      <section class="welcome-row" id="overview">
+        <div><p class="eyebrow">YOUR CITY. YOUR AIR. YOUR HEALTH.</p><h1>Understand the air<br><span>around you.</span></h1><p class="welcome-copy">Explore live air quality, understand pollution patterns and make healthier everyday decisions.</p></div>
+        <div class="search-card"><label for="cityInput">EXPLORE A CITY</label><div class="search-control"><i class="fa-solid fa-location-dot"></i><input id="cityInput" value="Ahmedabad" placeholder="Search city, e.g. Surat"><button id="searchCity">Explore <i class="fa-solid fa-arrow-right"></i></button></div><small id="dataStatus">Loading air quality data…</small></div>
+      </section>
+
+      <section class="section-block">
+        <div class="section-heading"><div><p class="eyebrow">AIR QUALITY SNAPSHOT</p><h2 id="cityHeading">Ahmedabad, India</h2></div><span class="updated-label"><i class="fa-regular fa-clock"></i> <span id="updatedAt">Updating…</span></span></div>
+        <div class="snapshot-grid">
+          <article class="aqi-card panel">
+            <div class="card-top"><span>US AIR QUALITY INDEX</span><i class="fa-solid fa-wind"></i></div>
+            <div class="aqi-main"><div class="aqi-number" id="aqiValue">--</div><div><span class="aqi-tag" id="aqiLabel">Loading</span><p id="aqiMessage">Fetching latest readings</p></div></div>
+            <div class="aqi-scale"><span>Good</span><span>Moderate</span><span>Unhealthy</span></div><div class="scale-track"><span id="aqiMarker"></span></div>
+            <div class="aqi-foot"><span><i class="fa-solid fa-location-crosshairs"></i> Current selected location</span><b id="aqiAdviceShort">Checking conditions</b></div>
+          </article>
+          <article class="panel pollutant-panel"><div class="card-top"><span>POLLUTANT LEVELS</span><span class="muted">μg/m³</span></div><div class="pollutant-grid">
+            <div class="pollutant"><span class="pollutant-dot teal"></span><small>PM2.5</small><b id="pm25">--</b><em>Fine particles</em></div>
+            <div class="pollutant"><span class="pollutant-dot blue"></span><small>PM10</small><b id="pm10">--</b><em>Coarse particles</em></div>
+            <div class="pollutant"><span class="pollutant-dot orange"></span><small>NO₂</small><b id="no2">--</b><em>Nitrogen dioxide</em></div>
+            <div class="pollutant"><span class="pollutant-dot purple"></span><small>O₃</small><b id="o3">--</b><em>Ozone</em></div>
+            <div class="pollutant"><span class="pollutant-dot red"></span><small>SO₂</small><b id="so2">--</b><em>Sulphur dioxide</em></div>
+            <div class="pollutant"><span class="pollutant-dot yellow"></span><small>CO</small><b id="co">--</b><em>Carbon monoxide</em></div>
+          </div></article>
+        </div>
+      </section>
+
+      <section class="section-block" id="map-section">
+        <div class="section-heading"><div><p class="eyebrow">DISCOVER YOUR SURROUNDINGS</p><h2>Air quality map</h2></div><span class="section-note">Explore a location to view its readings</span></div>
+        <div class="panel map-panel"><div class="map-toolbar"><div><b><i class="fa-solid fa-map"></i> Interactive city explorer</b><small>Click anywhere on the map to inspect nearby air quality.</small></div><span class="map-legend"><i></i> Selected location</span></div><div id="airMap"></div></div>
+      </section>
+
+      <section class="section-block" id="analytics-section">
+        <div class="section-heading"><div><p class="eyebrow">TURN DATA INTO INSIGHT</p><h2>Pollution analytics</h2></div><span class="section-note">Based on available hourly readings</span></div>
+        <div class="analytics-grid">
+          <article class="panel chart-panel"><div class="panel-heading"><div><b>Hourly air quality trend</b><small>US AQI · next 24 hours</small></div><span class="chart-chip">FORECAST</span></div><canvas id="aqiChart"></canvas></article>
+          <article class="panel chart-panel"><div class="panel-heading"><div><b>Pollutant comparison</b><small>Latest available values</small></div><span class="chart-chip">LIVE</span></div><canvas id="pollutantChart"></canvas></article>
+        </div>
+      </section>
+
+      <section class="section-block" id="forecast-section">
+        <div class="section-heading"><div><p class="eyebrow">PLAN AHEAD</p><h2>Air quality forecast</h2></div><span class="section-note">Next 12 hours · model forecast</span></div>
+        <div class="panel forecast-panel"><div class="forecast-intro"><div><b>What might the air feel like?</b><small>Use the forecast to plan outdoor time. Conditions can change.</small></div><span class="forecast-icon"><i class="fa-solid fa-cloud-sun"></i></span></div><div class="hourly-list" id="hourlyForecast"><div class="loading-line">Loading forecast…</div></div></div>
+      </section>
+
+      <section class="section-block two-column" >
+        <div class="panel assistant-panel" id="assistant-section"><div class="section-heading compact"><div><p class="eyebrow">ASK WITH CONFIDENCE</p><h2>BreatheWise assistant</h2></div><span class="assistant-orb"><i class="fa-solid fa-sparkles"></i></span></div><p class="assistant-desc">Ask about the current air quality. The assistant uses the latest readings loaded on this page to create a practical response.</p><div class="suggestions"><button class="suggestion">Is it safe to jog today?</button><button class="suggestion">Explain PM2.5</button><button class="suggestion">What should I do outside?</button></div><div class="chat-window" id="chatWindow"><div class="chat-message bot"><span class="chat-avatar"><i class="fa-solid fa-wind"></i></span><p>Hi! I'm BreatheWise. Ask me about the air quality in your selected city.</p></div></div><form id="chatForm" class="chat-form"><input id="chatInput" placeholder="Ask about today's air…" autocomplete="off"><button aria-label="Send message"><i class="fa-solid fa-arrow-up"></i></button></form><small class="disclaimer">Smart rule-based assistant · not a medical diagnosis or a generative AI service.</small></div>
+        <div class="panel health-panel" id="health-section"><div class="section-heading compact"><div><p class="eyebrow">BREATHE BETTER</p><h2>Personal health guide</h2></div><span class="health-icon"><i class="fa-solid fa-heart-pulse"></i></span></div><div class="health-status" id="healthStatus"><span class="status-dot"></span><div><b>Checking conditions</b><small>Personal guidance based on current AQI</small></div></div><div class="health-tips" id="healthTips"><div class="health-tip"><i class="fa-solid fa-circle-info"></i><span>Health guidance will appear when readings load.</span></div></div><div class="health-footer">People with asthma, heart or lung conditions, children and older adults may be more sensitive to air pollution.</div></div>
+      </section>
+
+      <section class="section-block" id="alerts-section">
+        <div class="section-heading"><div><p class="eyebrow">STAY INFORMED</p><h2>Pollution alerts</h2></div><span class="section-note">Alerts run while this page is open</span></div>
+        <div class="panel alerts-panel"><div class="alert-copy"><span class="alert-icon"><i class="fa-solid fa-bell"></i></span><div><b>Get notified when air quality worsens</b><small>Choose an AQI threshold. Browser permission is required for notifications.</small></div></div><div class="alert-controls"><label for="alertThreshold">Notify me at AQI</label><select id="alertThreshold"><option value="51">Above 50 · Moderate</option><option value="101" selected>Above 100 · Unhealthy for sensitive groups</option><option value="151">Above 150 · Unhealthy</option><option value="201">Above 200 · Very unhealthy</option></select><button class="primary-btn" id="enableAlerts">Enable alerts</button><span id="alertStatus" class="muted">Alerts are off</span></div></div>
+      </section>
+
+      <section class="section-block" id="eco-section">
+        <div class="section-heading"><div><p class="eyebrow">MAKE A POSITIVE IMPACT</p><h2>Eco explorer</h2></div><span class="section-note">Small steps, cleaner communities</span></div>
+        <div class="eco-grid"><article class="eco-feature"><div class="eco-feature-content"><span class="eco-kicker">THIS WEEK'S ECO MISSION</span><h3>Choose one cleaner commute.</h3><p>Walk, cycle, carpool or use public transport for one short journey when practical and safe.</p><button id="ecoComplete" class="eco-btn"> <i class="fa-solid fa-check"></i> Mark mission complete</button><small id="ecoProgress">0 missions completed</small></div><div class="eco-art"><i class="fa-solid fa-leaf"></i><span></span></div></article><div class="eco-side"><div class="eco-stat panel"><span><i class="fa-solid fa-seedling"></i></span><div><b id="ecoCount">0</b><small>Eco missions completed</small></div></div><div class="eco-tip panel"><b>Did you know?</b><p>Reducing unnecessary vehicle trips can help lower traffic-related emissions. Every community action contributes to cleaner streets.</p><span>#BreatheBetterTogether</span></div></div></div>
+      </section>
+
+      <footer class="footer"><a class="footer-brand" href="#overview"><i class="fa-solid fa-wind"></i> BreatheWise AI</a><span>Data: Open-Meteo · Map: OpenStreetMap contributors</span><span>For awareness only · Not medical advice</span></footer>
+    </main>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/analytics.js"></script>
+  <script src="js/assistant.js"></script>
+  <script src="js/alerts.js"></script>
+  <script src="js/forecast.js"></script>
+  <script src="js/eco.js"></script>
+</body>
+</html>

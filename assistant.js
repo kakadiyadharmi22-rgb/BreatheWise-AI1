@@ -1,0 +1,14 @@
+function assistantReply(question){
+ const q=question.toLowerCase(),aqi=Math.round(BW.aqi||0),band=aqiBand(aqi),pm=Number(BW.current.pm25)||0;
+ if(/jog|run|exercise|walk|outside|outdoor/.test(q)){if(aqi<=50)return `Current US AQI in ${BW.locationName} is ${aqi} (${band.label}). Outdoor activity is generally reasonable for most people. If you feel irritation, take a break.`;if(aqi<=100)return `The current US AQI is ${aqi} (${band.label}). Most people can continue normal activity, but unusually long or intense outdoor exercise may bother sensitive individuals.`;return `Current US AQI is ${aqi} (${band.label}). Consider moving intense exercise indoors or reducing its duration. People with asthma or heart/lung conditions should follow their clinician's advice.`}
+ if(/pm2.?5|fine particle/.test(q))return `PM2.5 means tiny airborne particles with a diameter of 2.5 micrometres or smaller. They can travel deep into the lungs. The latest modelled PM2.5 value here is ${pm.toFixed(1)} μg/m³.`
+ if(/aqi|index|score|good|bad/.test(q))return `The current modelled US AQI for ${BW.locationName} is ${aqi} (${band.label}). ${band.advice}. AQI is a communication index, not a direct measurement of personal exposure.`
+ if(/health|mask|asthma|child|older|sensitive/.test(q))return `With AQI ${aqi} (${band.label}), ${band.advice.toLowerCase()}. Children, older adults and people with heart or lung conditions may be more sensitive. For personal medical advice, consult a qualified healthcare professional.`
+ if(/tomorrow|forecast|hour/.test(q))return "Open the Air quality forecast section for the next 12 hours. Forecasts are model estimates and may differ from conditions measured at your exact location."
+ if(/city|surat|ahmedabad|change/.test(q))return "Use the city search at the top of the dashboard to load another city. You can also click a point on the interactive map to inspect readings at that location."
+ return `For ${BW.locationName}, the latest US AQI is ${aqi} (${band.label}) and PM2.5 is ${pm.toFixed(1)} μg/m³. ${band.advice}. You can ask me about jogging, PM2.5, health, AQI or the forecast.`;
+}
+function addChat(text,type){const row=document.createElement("div");row.className="chat-message "+type;const p=document.createElement("p");p.textContent=text;if(type==="bot"){const av=document.createElement("span");av.className="chat-avatar";av.innerHTML='<i class="fa-solid fa-wind"></i>';row.appendChild(av)}row.appendChild(p);$("chatWindow").appendChild(row);$("chatWindow").scrollTop=$("chatWindow").scrollHeight}
+function sendQuestion(q){if(!q.trim())return;addChat(q,"user");addChat(assistantReply(q),"bot")}
+$("chatForm").addEventListener("submit",e=>{e.preventDefault();sendQuestion($("chatInput").value);$("chatInput").value=""});
+document.querySelectorAll(".suggestion").forEach(b=>b.addEventListener("click",()=>sendQuestion(b.textContent)));
